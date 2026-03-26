@@ -1,0 +1,47 @@
+title_id,show_id,genre
+1,s1,Action & Adventure
+1,s1,Dramas
+2,s2,International TV Shows
+2,s2,Romantic TV Shows
+3,s3,Documentaries
+3,s3,International Movies
+4,s4,Dramas
+4,s4,Independent Movies
+5,s5,Kids' TV
+5,s5,Docuseries
+6,s6,Comedies
+6,s6,Stand-Up Comedy
+7,s7,Comedies
+7,s7,International Movies
+8,s8,British TV Shows
+8,s8,Docuseries
+9,s9,Sci-Fi & Fantasy
+9,s9,Action & Adventure
+10,s10,Documentaries
+10,s10,Special Interest
+11,s11,Crime TV Shows
+11,s11,TV Dramas
+12,s12,Thrillers
+12,s12,Dramas
+13,s13,Reality TV
+13,s13,International TV Shows
+14,s14,Action & Adventure
+14,s14,International Movies
+15,s16,Kids' TV
+15,s16,TV Comedies
+16,s17,Dramas
+16,s17,International Movies
+17,s18,Comedies
+17,s18,Dramas
+18,s19,International TV Shows
+18,s19,TV Dramas
+19,s20,Documentaries
+19,s20,History
+20,s21,Music & Musicals
+20,s21,Dramas
+21,s22,Kids' TV
+21,s22,TV Comedies
+22,s23,Dramas
+22,s23,Romantic Movies
+23,s25,Docuseries
+23,s25,International TV Shows

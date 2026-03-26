@@ -1,0 +1,15 @@
+Netflix ETL Pipeline Run Summary
+================================
+Titles loaded: 23
+New titles loaded: 0
+Genres loaded: 46
+Countries loaded: 23
+Database URL: sqlite:////home/arnab/CODE/ETL-Data Engineering/netflix_etl/output/analytics.db
+Analytical CSV outputs: 5
+
+Query result files:
+- top_10_genres.csv
+- content_added_per_year.csv
+- movies_vs_tv_ratio.csv
+- top_10_countries.csv
+- rating_distribution.csv

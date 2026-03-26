@@ -67,6 +67,36 @@ def save_dashboard_exports(results: Dict[str, pd.DataFrame], titles: pd.DataFram
         dataframe.to_csv(dashboard_dir / f"{name}_dashboard.csv", index=False)
 
 
+def save_database_table_exports(titles: pd.DataFrame, genres: pd.DataFrame, countries: pd.DataFrame, output_dir: Path) -> None:
+    """Export the core database tables to CSV files for repository-friendly inspection."""
+    tables_dir = output_dir / "db_tables"
+    tables_dir.mkdir(parents=True, exist_ok=True)
+    titles.to_csv(tables_dir / "titles.csv", index=False)
+    genres.to_csv(tables_dir / "genres.csv", index=False)
+    countries.to_csv(tables_dir / "countries.csv", index=False)
+
+
+def save_run_summary(metadata: Dict[str, object], output_dir: Path) -> None:
+    """Write a compact text summary of the latest pipeline run to the output directory."""
+    summary_lines = [
+        "Netflix ETL Pipeline Run Summary",
+        "================================",
+        f"Titles loaded: {metadata['titles_loaded']}",
+        f"New titles loaded: {metadata['new_titles_loaded']}",
+        f"Genres loaded: {metadata['genres_loaded']}",
+        f"Countries loaded: {metadata['countries_loaded']}",
+        f"Database URL: {metadata['database_url']}",
+        f"Analytical CSV outputs: {len(metadata['query_results'])}",
+        "",
+        "Query result files:",
+    ]
+
+    for name in metadata["query_results"]:
+        summary_lines.append(f"- {name}.csv")
+
+    (output_dir / "run_summary.txt").write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
+
+
 def stage_dataframes(raw_dataframe: pd.DataFrame, cleaned_dataframe: pd.DataFrame, output_dir: Path) -> None:
     """Save raw and cleaned pipeline layers to staged output locations for auditability."""
     raw_dir = output_dir / "staged" / "raw"
@@ -292,4 +322,6 @@ def load_data(
         "countries_loaded": len(countries),
         "database_url": database_url,
     }
+    save_database_table_exports(loaded_titles, genres, countries, output_path)
+    save_run_summary(metadata, output_path)
     return metadata

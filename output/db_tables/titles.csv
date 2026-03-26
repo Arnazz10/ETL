@@ -1,0 +1,24 @@
+title_id,show_id,type,title,director,cast,country,date_added,date_added_year,release_year,rating,duration,listed_in,description,decade
+1,s1,Movie,The Last Kingdom,,Actor A,United States,"September 9, 2021",2021,2021,TV-MA,95 min,"Action & Adventure, Dramas",A war drama.,2020s
+2,s2,TV Show,City Lights,Director B,"Actor B, Actor C",India,"July 15, 2020",2020,2020,TV-14,2 Seasons,"International TV Shows, Romantic TV Shows",A modern romance.,2020s
+3,s3,Movie,Ocean Deep,Director C,Actor D,United Kingdom,"January 4, 2019",2019,2018,PG,88 min,"Documentaries, International Movies",Underwater exploration.,2010s
+4,s4,Movie,Missing Rating Film,Director D,Actor E,France,"March 2, 2018",2018,2017,NR,101 min,"Dramas, Independent Movies",An indie drama.,2010s
+5,s5,TV Show,Science 101,Director E,Actor F,United States,"November 11, 2022",2022,2022,TV-G,1 Season,"Kids' TV, Docuseries",Science for kids.,2020s
+6,s6,Movie,Comedy Night,Director F,Actor G,Canada,"May 5, 2021",2021,2021,PG-13,97 min,"Comedies, Stand-Up Comedy",A stand-up special.,2020s
+7,s7,Movie,Null Type Test,Director G,Actor H,Brazil,"June 1, 2020",2020,2019,R,110 min,"Comedies, International Movies",Should be removed if type missing.,2010s
+8,s8,TV Show,Historic Tales,Director H,Actor I,Germany,"August 19, 2017",2017,2016,TV-PG,3 Seasons,"British TV Shows, Docuseries",Stories from the past.,2010s
+9,s9,Movie,Space Journey,Director I,Actor J,Japan,"December 25, 2019",2019,2019,PG-13,123 min,"Sci-Fi & Fantasy, Action & Adventure",A space adventure.,2010s
+10,s10,Movie,Cooking Home,Director J,Actor K,Italy,"April 10, 2018",2018,2018,G,84 min,"Documentaries, Special Interest",Home cooking series.,2010s
+11,s11,TV Show,Crime Files,Director K,Actor L,Spain,"February 14, 2023",2023,2023,TV-MA,4 Seasons,"Crime TV Shows, TV Dramas",A crime anthology.,2020s
+12,s12,Movie,Silent River,Director L,Actor M,Australia,"October 22, 2016",2016,2015,NR,90 min,"Thrillers, Dramas",Mystery by the river.,2010s
+13,s13,TV Show,Design Dreams,Director M,Actor N,South Korea,"May 30, 2021",2021,2021,TV-PG,2 Seasons,"Reality TV, International TV Shows",Competition show.,2020s
+14,s14,Movie,Desert Storm,Director N,Actor O,Egypt,"July 7, 2015",2015,2014,TV-14,111 min,"Action & Adventure, International Movies",An action thriller.,2010s
+15,s16,TV Show,Family Matters,Director P,Actor Q,United States,"March 8, 2019",2019,2019,NR,5 Seasons,"Kids' TV, TV Comedies",Family sitcom.,2010s
+16,s17,Movie,Northern Sky,Director Q,Actor R,Norway,"September 12, 2022",2022,2022,PG,102 min,"Dramas, International Movies",A winter tale.,2020s
+17,s18,Movie,Startup Hub,Director R,Actor S,India,"June 21, 2023",2023,2023,TV-14,109 min,"Comedies, Dramas",Office startup comedy.,2020s
+18,s19,TV Show,Island Life,Director S,Actor T,Philippines,"April 1, 2021",2021,2021,TV-14,1 Season,"International TV Shows, TV Dramas",Life on an island.,2020s
+19,s20,Movie,Ancient Worlds,Director T,Actor U,Greece,"December 3, 2018",2018,2018,PG,93 min,"Documentaries, History",Ancient civilizations.,2010s
+20,s21,Movie,Urban Beats,Director U,Actor V,United States,"May 9, 2020",2020,2020,R,105 min,"Music & Musicals, Dramas",A music drama.,2020s
+21,s22,TV Show,Coders Club,Director V,Actor W,Singapore,"August 28, 2022",2022,2022,TV-Y7,2 Seasons,"Kids' TV, TV Comedies",Young coders learn together.,2020s
+22,s23,Movie,Mountain Echoes,Director W,Actor X,Argentina,"October 10, 2017",2017,2017,PG,98 min,"Dramas, Romantic Movies",Romance in the mountains.,2010s
+23,s25,TV Show,World Cuisine,Director Y,Actor Z,Mexico,"June 6, 2020",2020,2020,TV-G,3 Seasons,"Docuseries, International TV Shows",Travel and food.,2020s

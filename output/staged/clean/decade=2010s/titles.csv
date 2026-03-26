@@ -1,0 +1,12 @@
+show_id,type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description,genres,date_added_year,country_primary,decade,title_id
+s3,Movie,Ocean Deep,Director C,Actor D,United Kingdom,"January 4, 2019",2018,PG,88 min,"Documentaries, International Movies",Underwater exploration.,"['Documentaries', 'International Movies']",2019,United Kingdom,2010s,3
+s4,Movie,Missing Rating Film,Director D,Actor E,France,"March 2, 2018",2017,NR,101 min,"Dramas, Independent Movies",An indie drama.,"['Dramas', 'Independent Movies']",2018,France,2010s,4
+s7,Movie,Null Type Test,Director G,Actor H,Brazil,"June 1, 2020",2019,R,110 min,"Comedies, International Movies",Should be removed if type missing.,"['Comedies', 'International Movies']",2020,Brazil,2010s,7
+s8,TV Show,Historic Tales,Director H,Actor I,Germany,"August 19, 2017",2016,TV-PG,3 Seasons,"British TV Shows, Docuseries",Stories from the past.,"['British TV Shows', 'Docuseries']",2017,Germany,2010s,8
+s9,Movie,Space Journey,Director I,Actor J,"Japan, United States","December 25, 2019",2019,PG-13,123 min,"Sci-Fi & Fantasy, Action & Adventure",A space adventure.,"['Sci-Fi & Fantasy', 'Action & Adventure']",2019,Japan,2010s,9
+s10,Movie,Cooking Home,Director J,Actor K,Italy,"April 10, 2018",2018,G,84 min,"Documentaries, Special Interest",Home cooking series.,"['Documentaries', 'Special Interest']",2018,Italy,2010s,10
+s12,Movie,Silent River,Director L,Actor M,Australia,"October 22, 2016",2015,NR,90 min,"Thrillers, Dramas",Mystery by the river.,"['Thrillers', 'Dramas']",2016,Australia,2010s,12
+s14,Movie,Desert Storm,Director N,Actor O,Egypt,"July 7, 2015",2014,TV-14,111 min,"Action & Adventure, International Movies",An action thriller.,"['Action & Adventure', 'International Movies']",2015,Egypt,2010s,14
+s16,TV Show,Family Matters,Director P,Actor Q,"United States, United Kingdom","March 8, 2019",2019,NR,5 Seasons,"Kids' TV, TV Comedies",Family sitcom.,"[""Kids' TV"", 'TV Comedies']",2019,United States,2010s,15
+s20,Movie,Ancient Worlds,Director T,Actor U,Greece,"December 3, 2018",2018,PG,93 min,"Documentaries, History",Ancient civilizations.,"['Documentaries', 'History']",2018,Greece,2010s,19
+s23,Movie,Mountain Echoes,Director W,Actor X,Argentina,"October 10, 2017",2017,PG,98 min,"Dramas, Romantic Movies",Romance in the mountains.,"['Dramas', 'Romantic Movies']",2017,Argentina,2010s,22
