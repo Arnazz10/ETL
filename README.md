@@ -1,69 +1,52 @@
 # Netflix Analytics ETL Pipeline
 
-An interview-ready data engineering project that extracts Netflix title data from CSV, cleans and validates it with Python, loads it into an analytics database, and exports dashboard-ready datasets for BI tools or a future web frontend.
+A Python-based ETL pipeline for processing Netflix title data, loading analytics-ready tables into a database, and publishing dashboard-ready exports for reporting and a static frontend.
 
-Repository owner details:
+## Overview
 
-- GitHub username: `Arnazz10`
-- Repository: `https://github.com/Arnazz10/ETL`
+The project ingests Netflix title records from a CSV file, applies validation and transformation rules, stores normalized data in SQLite or PostgreSQL, and generates analytical outputs for dashboards.
 
-Do not commit passwords, tokens, or personal access tokens into this repository. Use GitHub authentication locally or Vercel environment variables for secrets.
+Core capabilities:
 
-## Project Goal
-
-The goal is to show a complete mini data platform:
-
-1. Ingest raw Netflix title data.
-2. Validate the dataset shape and required columns.
-3. Clean and enrich the records for analytics.
-4. Load normalized tables into SQLite by default, with PostgreSQL support.
-5. Run SQL analytics queries.
-6. Export clean CSV files for dashboards, BI tools, or a Vercel frontend.
-
-This is a strong portfolio project because it demonstrates Python ETL, data quality checks, incremental loading, SQL analytics, orchestration, testing, and dashboard outputs.
-
-## MVP
-
-The MVP is the smallest complete version that proves the system works end to end.
-
-- Input: `data/netflix_titles.csv`
-- Processing: extract, transform, validate, load, analyze
-- Storage: SQLite database at `output/analytics.db`
-- Outputs:
-  - normalized database tables
-  - staged raw and clean CSV files
-  - analytics CSVs
-  - dashboard-ready CSVs
-  - pipeline logs
-- Validation: unit tests for transformation logic
-- Optional orchestration: Prefect flow
+- CSV extraction with schema validation
+- data cleaning and feature engineering with pandas
+- data quality checks for required fields and unique identifiers
+- incremental loading based on `show_id`
+- normalized database tables for titles, genres, and countries
+- analytical SQL query outputs
+- staged raw and clean data exports
+- Prefect orchestration entrypoint
+- static dashboard frontend for Vercel deployment
+- unit tests for transformation logic
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    A[Netflix CSV Dataset] --> B[Extract Layer]
-    B --> C[Data Quality Checks]
-    C --> D[Transform Layer]
-    D --> E[Staged Raw and Clean CSVs]
-    D --> F[Load Layer]
+    A[Netflix CSV Dataset] --> B[Extract]
+    B --> C[Validate Required Columns]
+    C --> D[Transform and Clean]
+    D --> E[Stage Raw and Clean CSVs]
+    D --> F[Load Database Tables]
     F --> G[(SQLite or PostgreSQL)]
-    G --> H[SQL Analytics Queries]
-    H --> I[Analytics CSV Outputs]
-    H --> J[Dashboard CSV Exports]
-    J --> K[Vercel Frontend MVP]
-    F --> L[Pipeline Logs and Run Summary]
+    G --> H[Run SQL Analytics]
+    H --> I[Analytics CSVs]
+    H --> J[Dashboard Exports]
+    J --> K[Static Frontend on Vercel]
+    F --> L[Logs and Run Summary]
 ```
 
-## How The Pipeline Works
+## Data Flow
 
-### 1. Extract
+### Extract
 
-File: `etl/extract.py`
+Source file:
 
-The pipeline reads `data/netflix_titles.csv` into a pandas dataframe. It checks that the required columns exist before allowing processing to continue.
+```text
+data/netflix_titles.csv
+```
 
-Required input columns:
+The extract step reads the CSV into a pandas dataframe and validates that the source contains the required columns:
 
 - `show_id`
 - `type`
@@ -74,40 +57,44 @@ Required input columns:
 - `rating`
 - `listed_in`
 
-### 2. Transform
+Implementation: `etl/extract.py`
 
-File: `etl/transform.py`
+### Transform
 
-The transform layer cleans and enriches the raw dataset:
+The transform step prepares the dataset for analytics:
 
-- drops rows missing mandatory `title` or `type`
-- fills missing `rating` values with `NR`
-- splits `listed_in` into a list of genres
-- extracts `date_added_year` from `date_added`
-- normalizes `country` to the first listed country
-- derives `decade` from `release_year`
-- creates a surrogate `title_id`
-- validates that `show_id`, `title`, and `type` are not null
-- validates that `show_id` is unique
+- removes records missing `title` or `type`
+- fills missing ratings with `NR`
+- parses genres from `listed_in`
+- derives `date_added_year`
+- normalizes the country field to a primary country
+- derives release decade
+- assigns a `title_id` surrogate key
+- validates non-null mandatory fields
+- validates unique `show_id` values
 
-### 3. Load
+Implementation: `etl/transform.py`
 
-File: `etl/load.py`
+### Load
 
-The load layer writes the transformed data into a database and exports files for analytics.
+The load step writes the processed data into the configured database and creates export files.
 
 Database tables:
 
-- `titles`: one row per Netflix title
-- `genres`: one row per title and genre
-- `countries`: one row per title and normalized country
-- `staging_titles`: latest cleaned dataset snapshot
+| Table | Description |
+| --- | --- |
+| `titles` | One row per Netflix title |
+| `genres` | Exploded genre records keyed by title |
+| `countries` | Normalized country records keyed by title |
+| `staging_titles` | Latest transformed dataset snapshot |
 
-The loader supports incremental behavior by checking existing `show_id` values. New titles are appended, and reporting tables are rebuilt from the current title set.
+The loader checks existing `show_id` values to support incremental appends. Reporting tables are rebuilt after each run to keep analytics outputs consistent.
 
-### 4. Analytics
+Implementation: `etl/load.py`
 
-The pipeline runs these SQL reports:
+### Analytics
+
+The pipeline runs SQL queries for:
 
 - top 10 genres
 - content added per year
@@ -117,28 +104,28 @@ The pipeline runs these SQL reports:
 
 ## Inputs And Outputs
 
-### Input
+### Inputs
 
 | Input | Location | Purpose |
 | --- | --- | --- |
 | Netflix title CSV | `data/netflix_titles.csv` | Raw source dataset |
-| Environment config | `.env` | Optional paths and database URL |
+| Environment config | `.env` | Runtime paths and database configuration |
 
-### Main Outputs
+### Outputs
 
 | Output | Location | Purpose |
 | --- | --- | --- |
-| SQLite database | `output/analytics.db` | Analytics storage |
-| Raw staged data | `output/staged/raw/raw_extract.csv` | Audit copy of extracted data |
-| Clean staged data | `output/staged/clean/cleaned_titles.csv` | Cleaned analytics dataset |
+| SQLite database | `output/analytics.db` | Local analytics database |
+| Raw extract | `output/staged/raw/raw_extract.csv` | Audit copy of source data |
+| Clean titles | `output/staged/clean/cleaned_titles.csv` | Transformed dataset |
 | Decade partitions | `output/staged/clean/decade=*/titles.csv` | Partitioned clean data |
 | Analytics CSVs | `output/*.csv` | SQL query results |
-| Dashboard CSVs | `output/dashboard/*.csv` | Frontend or BI-ready files |
-| DB table exports | `output/db_tables/*.csv` | Easy inspection of database tables |
-| Pipeline log | `output/pipeline.log` | Operational logs |
-| Run summary | `output/run_summary.txt` | Latest run summary |
+| Dashboard CSVs | `output/dashboard/*.csv` | Static dashboard data source |
+| Database table exports | `output/db_tables/*.csv` | CSV copies of loaded tables |
+| Pipeline log | `output/pipeline.log` | Execution log |
+| Run summary | `output/run_summary.txt` | Latest run metadata |
 
-## Current Project Structure
+## Project Structure
 
 ```text
 netflix_etl/
@@ -153,6 +140,12 @@ netflix_etl/
 │   ├── logging_utils.py
 │   ├── quality.py
 │   └── transform.py
+├── frontend/
+│   ├── assets/
+│   ├── public/data/
+│   ├── app.js
+│   ├── index.html
+│   └── styles.css
 ├── orchestration/
 │   └── prefect_flow.py
 ├── output/
@@ -162,6 +155,8 @@ netflix_etl/
 │   ├── staged/
 │   ├── pipeline.log
 │   └── run_summary.txt
+├── scripts/
+│   └── sync_frontend_data.sh
 ├── tests/
 │   └── test_transform.py
 ├── .env.example
@@ -170,7 +165,7 @@ netflix_etl/
 └── requirements.txt
 ```
 
-## Local Setup
+## Setup
 
 ```bash
 cd netflix_etl
@@ -180,17 +175,28 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-## Run The ETL Pipeline
+## Configuration
+
+The pipeline reads configuration from `.env`.
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `NETFLIX_DATA_PATH` | Source CSV path | `data/netflix_titles.csv` |
+| `NETFLIX_OUTPUT_DIR` | Output directory | `output` |
+| `NETFLIX_LOG_FILE` | Log file path | `output/pipeline.log` |
+| `NETFLIX_DATABASE_URL` | SQLAlchemy database URL | SQLite database in `output` |
+
+PostgreSQL example:
+
+```bash
+NETFLIX_DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/netflix_analytics
+```
+
+## Run Pipeline
 
 ```bash
 source .venv/bin/activate
 python main.py
-```
-
-Default database target:
-
-```text
-sqlite:///output/analytics.db
 ```
 
 ## Run With Prefect
@@ -207,160 +213,51 @@ source .venv/bin/activate
 pytest
 ```
 
-## Environment Variables
+## Frontend
 
-The project reads these optional variables from `.env`:
+The `frontend/` directory contains a static dashboard that reads generated CSV files from `frontend/public/data/`.
 
-| Variable | Purpose |
-| --- | --- |
-| `NETFLIX_DATA_PATH` | Path to source CSV |
-| `NETFLIX_OUTPUT_DIR` | Directory for generated outputs |
-| `NETFLIX_LOG_FILE` | Pipeline log file path |
-| `NETFLIX_DATABASE_URL` | SQLAlchemy database URL |
+Features:
 
-Example PostgreSQL target:
+- KPI cards
+- type, rating, decade, and title search filters
+- bar charts for yearly additions, content type mix, genres, countries, and ratings
+- filtered title table
 
-```bash
-NETFLIX_DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/netflix_analytics
-```
-
-## Vercel Frontend Plan
-
-Vercel is best for the frontend layer, not for running the full Python ETL job as a long-running data pipeline. The practical architecture is:
-
-```mermaid
-flowchart LR
-    A[Python ETL Run Locally or Scheduled] --> B[Generated Dashboard CSVs]
-    B --> C[Commit or Upload Static JSON/CSV]
-    C --> D[Next.js Frontend on Vercel]
-    D --> E[Interactive Charts and KPI Cards]
-```
-
-Recommended frontend MVP:
-
-- build a `frontend/` app using Next.js
-- read the exported dashboard CSV files or converted JSON files
-- show KPI cards:
-  - total titles
-  - movie count
-  - TV show count
-  - top country
-  - most common rating
-- show charts:
-  - movies vs TV shows
-  - top 10 genres
-  - content added per year
-  - rating distribution
-  - top 10 countries
-- add filters:
-  - content type
-  - rating
-  - country
-  - release decade
-
-Good Vercel deployment flow:
-
-1. Run the Python ETL pipeline.
-2. Export dashboard CSV/JSON files into the frontend `public/data/` folder.
-3. Deploy the Next.js frontend to Vercel.
-4. Keep the ETL job separate. Later, schedule it with GitHub Actions, Prefect Cloud, Render cron, or a small VM.
-
-## Included Static Frontend
-
-This repository now includes a dependency-free frontend in `frontend/`. It reads CSV files from `frontend/public/data/` and renders KPI cards, bar charts, filters, and a title table.
-
-Run it locally:
-
-```bash
-python3 -m http.server 8000 --directory frontend
-```
-
-Then open:
-
-```text
-http://127.0.0.1:8000
-```
-
-Deploy it on Vercel:
-
-1. Import `https://github.com/Arnazz10/ETL`.
-2. Set the Vercel root directory to `frontend`.
-3. Leave build command empty.
-4. Deploy.
-
-Refresh frontend data after each ETL run:
+Refresh frontend data after running the ETL pipeline:
 
 ```bash
 bash scripts/sync_frontend_data.sh
 ```
 
-## Suggested Repo Revamp Roadmap
-
-### Phase 1: Polish Current Backend
-
-- Keep the current ETL code.
-- Improve README and diagrams.
-- Add sample outputs.
-- Add more tests for load and quality validation.
-- Add GitHub Actions to run tests on every push.
-
-### Phase 2: Add Frontend
-
-- Create `frontend/` with Next.js.
-- Use charts with Recharts or Chart.js.
-- Load data from `public/data/*.json`.
-- Deploy only the frontend folder to Vercel.
-
-### Phase 3: Make It Production-Like
-
-- Convert CSV exports to JSON for frontend performance.
-- Add a scheduled ETL workflow.
-- Store production data in PostgreSQL.
-- Add data quality failure reporting.
-- Add a small API layer only if dynamic querying is needed.
-
-## Interview Explanation
-
-Use this explanation:
-
-> This project is a Netflix analytics ETL pipeline. It extracts raw CSV data, validates the schema, transforms the dataset into analytics-friendly columns, loads normalized tables into SQLite or PostgreSQL, and generates SQL-based reporting outputs. I added staged raw and clean layers for auditability, data quality checks for reliability, incremental loading using `show_id`, and dashboard-ready exports so the same data can power BI dashboards or a Vercel frontend.
-
-Key technical points to mention:
-
-- `pandas` handles extraction and transformation.
-- SQLAlchemy abstracts SQLite and PostgreSQL loading.
-- `show_id` is the natural unique key used for incremental loading.
-- `title_id` is a generated surrogate key for normalized reporting tables.
-- Data quality checks fail fast if required columns, nulls, or duplicates break the contract.
-- The output layer supports both technical inspection and dashboard consumption.
-- Prefect is included to demonstrate orchestration.
-- Tests validate important transformation behavior.
-
-## What To Demo
-
-For an interview, run these commands:
+Run the frontend locally:
 
 ```bash
-source .venv/bin/activate
-python main.py
-pytest
+python3 -m http.server 8000 --directory frontend
 ```
 
-Then show:
+Open:
 
-- `output/run_summary.txt`
-- `output/dashboard/titles_dashboard.csv`
-- `output/top_10_genres.csv`
-- `output/analytics.db`
-- `etl/transform.py`
-- `etl/load.py`
-- the architecture diagram in this README
+```text
+http://127.0.0.1:8000
+```
 
-## Future Improvements
+## Vercel Deployment
 
-- Add a Next.js dashboard for Vercel deployment.
-- Add GitHub Actions CI.
-- Add JSON exports for frontend consumption.
-- Add more load-layer tests with a temporary SQLite database.
-- Add Great Expectations or Soda for richer data quality checks.
-- Add Docker for reproducible local execution.
+Deploy the static dashboard as a Vercel project:
+
+1. Import the GitHub repository.
+2. Set the Vercel root directory to `frontend`.
+3. Leave the build command empty.
+4. Deploy.
+
+The Python ETL pipeline should run outside Vercel, then publish refreshed CSV files to `frontend/public/data/` before deployment.
+
+## Development Notes
+
+- SQLite is the default database for local runs.
+- PostgreSQL is supported through `NETFLIX_DATABASE_URL`.
+- `show_id` is used as the natural key for incremental loading.
+- `title_id` is generated as a surrogate key for normalized reporting tables.
+- Generated output files are useful for auditing and dashboard consumption.
+- Do not commit credentials, database passwords, or access tokens.
