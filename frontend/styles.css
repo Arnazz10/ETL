@@ -103,7 +103,16 @@ button {
   font-weight: 600;
   letter-spacing: 0;
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: none;
+}
+
+.brand-name {
+  font-family: Outfit, Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .brand-mark {
