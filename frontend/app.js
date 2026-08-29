@@ -10,6 +10,13 @@ const dataFiles = {
 const state = {
   titles: [],
   filteredTitles: [],
+  summary: {
+    genres: [],
+    years: [],
+    types: [],
+    countries: [],
+    ratings: [],
+  },
 };
 
 function parseCsv(text) {
@@ -67,6 +74,15 @@ async function loadCsv(path) {
   return parseCsv(await response.text());
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function uniqueValues(rows, key) {
   return [...new Set(rows.map((row) => row[key]).filter(Boolean))].sort();
 }
@@ -85,24 +101,6 @@ function numberValue(value) {
   return Number.parseInt(value, 10) || 0;
 }
 
-function renderBars(containerId, rows, labelKey, valueKey) {
-  const container = document.getElementById(containerId);
-  const max = Math.max(...rows.map((row) => numberValue(row[valueKey])), 1);
-  container.innerHTML = rows
-    .map((row) => {
-      const value = numberValue(row[valueKey]);
-      const width = Math.max((value / max) * 100, 4);
-      return `
-        <div class="bar-row">
-          <span class="bar-label" title="${row[labelKey]}">${row[labelKey]}</span>
-          <span class="bar-track"><span class="bar-fill" style="width: ${width}%"></span></span>
-          <span class="bar-value">${value}</span>
-        </div>
-      `;
-    })
-    .join("");
-}
-
 function countBy(rows, key) {
   return rows.reduce((totals, row) => {
     const value = row[key] || "Unknown";
@@ -115,6 +113,84 @@ function topValue(rows, key) {
   const counts = countBy(rows, key);
   const [best] = Object.entries(counts).sort((a, b) => b[1] - a[1]);
   return best ? best[0] : "-";
+}
+
+function maxValue(rows, valueKey) {
+  return Math.max(...rows.map((row) => numberValue(row[valueKey])), 1);
+}
+
+function renderColumnChart(containerId, rows, labelKey, valueKey) {
+  const container = document.getElementById(containerId);
+  const max = maxValue(rows, valueKey);
+  container.innerHTML = rows
+    .map((row) => {
+      const value = numberValue(row[valueKey]);
+      const height = Math.max((value / max) * 100, 12);
+      return `
+        <div class="column" style="height: ${height}%" title="${escapeHtml(row[labelKey])}: ${value}">
+          <span>${escapeHtml(row[labelKey])}</span>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderProgressList(containerId, rows, labelKey, valueKey) {
+  const container = document.getElementById(containerId);
+  const max = maxValue(rows, valueKey);
+  container.innerHTML = rows
+    .map((row) => {
+      const value = numberValue(row[valueKey]);
+      const width = Math.max((value / max) * 100, 5);
+      return `
+        <div class="progress-row">
+          <strong>${escapeHtml(row[labelKey])}</strong>
+          <span>${value.toLocaleString()}</span>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: ${width}%"></div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderMiniColumns(containerId, rows, labelKey, valueKey) {
+  const container = document.getElementById(containerId);
+  const max = maxValue(rows, valueKey);
+  container.innerHTML = rows
+    .map((row) => {
+      const value = numberValue(row[valueKey]);
+      const height = Math.max((value / max) * 100, 14);
+      return `
+        <div class="mini-column" style="height: ${height}%" title="${escapeHtml(row[labelKey])}: ${value}">
+          <span>${escapeHtml(row[labelKey])}</span>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderDotList(containerId, rows, labelKey, valueKey) {
+  const container = document.getElementById(containerId);
+  const max = maxValue(rows, valueKey);
+  container.innerHTML = rows
+    .slice(0, 6)
+    .map((row) => {
+      const value = numberValue(row[valueKey]);
+      const activeDots = Math.max(Math.round((value / max) * 9), 1);
+      const dots = Array.from({ length: 9 }, (_, index) =>
+        `<span class="dot${index < activeDots ? " active" : ""}"></span>`,
+      ).join("");
+      return `
+        <div class="dot-row">
+          <strong>${escapeHtml(row[labelKey])}</strong>
+          <span>${value}</span>
+          <div class="dot-rack">${dots}</div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function filterTitles() {
@@ -142,10 +218,19 @@ function filterTitles() {
 
 function renderKpis() {
   const rows = state.filteredTitles;
-  document.getElementById("totalTitles").textContent = rows.length;
-  document.getElementById("movieCount").textContent = rows.filter((row) => row.type === "Movie").length;
-  document.getElementById("tvCount").textContent = rows.filter((row) => row.type === "TV Show").length;
+  const movieCount = rows.filter((row) => row.type === "Movie").length;
+  const tvCount = rows.filter((row) => row.type === "TV Show").length;
+  const loadedCount = state.titles.length || 1;
+  const qualityScore = Math.round((rows.length / loadedCount) * 100);
+
+  document.getElementById("totalTitles").textContent = rows.length.toLocaleString();
+  document.getElementById("movieCount").textContent = movieCount.toLocaleString();
+  document.getElementById("tvCount").textContent = tvCount.toLocaleString();
   document.getElementById("topCountry").textContent = topValue(rows, "country");
+  document.getElementById("mixTotal").textContent = rows.length.toLocaleString();
+  document.getElementById("qualityScore").textContent = `${qualityScore}%`;
+  document.getElementById("pipelineInsight").textContent =
+    `${rows.length} filtered records from ${state.titles.length} cleaned titles.`;
 }
 
 function renderTable() {
@@ -156,12 +241,12 @@ function renderTable() {
     .map(
       (row) => `
         <tr>
-          <td>${row.title}</td>
-          <td>${row.type}</td>
-          <td>${row.country}</td>
-          <td>${row.date_added_year}</td>
-          <td>${row.rating}</td>
-          <td>${row.listed_in}</td>
+          <td>${escapeHtml(row.title)}</td>
+          <td>${escapeHtml(row.type)}</td>
+          <td>${escapeHtml(row.country)}</td>
+          <td>${escapeHtml(row.date_added_year)}</td>
+          <td>${escapeHtml(row.rating)}</td>
+          <td>${escapeHtml(row.listed_in)}</td>
         </tr>
       `,
     )
@@ -174,7 +259,28 @@ function attachFilters() {
   });
 }
 
+function setTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.dataset.theme = theme;
+  document.getElementById("themeLabel").textContent = isDark ? "Dark" : "Light";
+  document.getElementById("themeToggle").setAttribute("aria-pressed", String(isDark));
+  localStorage.setItem("netflix-etl-theme", theme);
+}
+
+function attachThemeToggle() {
+  const savedTheme = localStorage.getItem("netflix-etl-theme");
+  const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  setTheme(savedTheme || preferredTheme);
+
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const currentTheme = document.documentElement.dataset.theme || "light";
+    setTheme(currentTheme === "dark" ? "light" : "dark");
+  });
+}
+
 async function init() {
+  attachThemeToggle();
+
   const [titles, genres, years, types, countries, ratings] = await Promise.all([
     loadCsv(dataFiles.titles),
     loadCsv(dataFiles.genres),
@@ -186,21 +292,22 @@ async function init() {
 
   state.titles = titles;
   state.filteredTitles = titles;
+  state.summary = { genres, years, types, countries, ratings };
 
   fillSelect("typeFilter", uniqueValues(titles, "type"));
   fillSelect("ratingFilter", uniqueValues(titles, "rating"));
   fillSelect("decadeFilter", uniqueValues(titles, "decade"));
 
-  renderBars("yearChart", years, "year_added", "content_count");
-  renderBars("typeChart", types, "type", "content_count");
-  renderBars("genreChart", genres, "genre", "content_count");
-  renderBars("countryChart", countries, "country", "content_count");
-  renderBars("ratingChart", ratings, "rating", "content_count");
+  renderColumnChart("yearChart", years, "year_added", "content_count");
+  renderProgressList("typeChart", types, "type", "content_count");
+  renderMiniColumns("ratingChart", ratings, "rating", "content_count");
+  renderDotList("genreChart", genres, "genre", "content_count");
+  renderDotList("countryChart", countries, "country", "content_count");
 
   attachFilters();
   filterTitles();
 }
 
 init().catch((error) => {
-  document.body.innerHTML = `<main class="panel"><h1>Dashboard data failed to load</h1><p>${error.message}</p></main>`;
+  document.body.innerHTML = `<main class="dashboard-shell"><h1>Dashboard data failed to load</h1><p>${escapeHtml(error.message)}</p></main>`;
 });

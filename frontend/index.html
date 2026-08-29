@@ -3,133 +3,176 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Netflix Analytics ETL Dashboard</title>
+    <title>Netflix ETL Dashboard</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <header class="app-header">
-      <div>
-        <p class="eyebrow">ETL Portfolio Project</p>
-        <h1>Netflix Analytics Pipeline</h1>
-        <p class="summary">
-          CSV ingestion, data quality checks, transformation, SQL loading, and dashboard exports in one workflow.
-        </p>
-      </div>
-      <div class="status-panel">
-        <span class="status-dot"></span>
-        <span>Static Vercel-ready dashboard</span>
-      </div>
-    </header>
+    <div class="dashboard-shell">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand" href="#">
+          <span class="brand-mark">N</span>
+          <span>netflix etl</span>
+        </a>
 
-    <main>
+        <div class="nav-links" aria-label="Dashboard sections">
+          <a class="active" href="#">Home</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#analytics">Analytics</a>
+          <a href="#records">Records</a>
+          <a href="#deploy">Deploy</a>
+        </div>
+
+        <div class="top-actions">
+          <button class="icon-button" type="button" aria-label="Search"></button>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme" aria-pressed="false">
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span id="themeLabel">Light</span>
+          </button>
+        </div>
+      </nav>
+
+      <header class="page-heading">
+        <div>
+          <h1>Overview</h1>
+          <p>Analytics generated from the Netflix ETL pipeline outputs.</p>
+        </div>
+        <div class="date-actions">
+          <span class="date-pill">Jan 01 - Jul 31</span>
+          <span class="date-pill muted">compared to</span>
+          <span class="date-pill">Aug 01 - Dec 31</span>
+          <button class="soft-button" type="button">Daily</button>
+        </div>
+      </header>
+
       <section class="controls" aria-label="Dashboard filters">
         <label>
-          Type
+          <span>Type</span>
           <select id="typeFilter">
             <option value="all">All</option>
           </select>
         </label>
         <label>
-          Rating
+          <span>Rating</span>
           <select id="ratingFilter">
             <option value="all">All</option>
           </select>
         </label>
         <label>
-          Decade
+          <span>Decade</span>
           <select id="decadeFilter">
             <option value="all">All</option>
           </select>
         </label>
-        <label>
-          Search
+        <label class="search-field">
+          <span>Search</span>
           <input id="searchInput" type="search" placeholder="Search titles">
         </label>
       </section>
 
-      <section class="kpis" aria-label="Key metrics">
-        <article>
-          <span>Total Titles</span>
-          <strong id="totalTitles">0</strong>
-        </article>
-        <article>
-          <span>Movies</span>
-          <strong id="movieCount">0</strong>
-        </article>
-        <article>
-          <span>TV Shows</span>
-          <strong id="tvCount">0</strong>
-        </article>
-        <article>
-          <span>Top Country</span>
-          <strong id="topCountry">-</strong>
-        </article>
-      </section>
-
-      <section class="dashboard-grid">
-        <article class="panel wide">
+      <main class="dashboard-grid" id="analytics">
+        <section class="panel payments-panel">
           <div class="panel-heading">
-            <h2>Content Added Per Year</h2>
-            <span>Trend</span>
+            <h2>Pipeline Volume</h2>
+            <button class="more-button" type="button" aria-label="More options">...</button>
           </div>
-          <div id="yearChart" class="bar-chart"></div>
-        </article>
 
-        <article class="panel">
+          <div class="metric-strip">
+            <div>
+              <span>Total Titles</span>
+              <strong id="totalTitles">0</strong>
+            </div>
+            <div>
+              <span>Movies</span>
+              <strong id="movieCount">0</strong>
+            </div>
+            <div class="highlight">
+              <span>TV Shows</span>
+              <strong id="tvCount">0</strong>
+            </div>
+            <div>
+              <span>Top Country</span>
+              <strong id="topCountry">-</strong>
+            </div>
+          </div>
+
+          <div id="yearChart" class="column-chart" aria-label="Content added per year"></div>
+
+          <div class="prompt-bar">
+            <span>Explore</span>
+            <strong id="pipelineInsight">Run analytics across the cleaned Netflix dataset.</strong>
+          </div>
+        </section>
+
+        <section class="panel revenue-panel">
           <div class="panel-heading">
-            <h2>Movies vs TV Shows</h2>
-            <span>Mix</span>
+            <h2>Content Mix</h2>
+            <button class="more-button" type="button" aria-label="More options">...</button>
           </div>
-          <div id="typeChart" class="bar-chart compact"></div>
-        </article>
+          <strong class="big-number" id="mixTotal">0</strong>
+          <span class="trend-badge">+ static export</span>
+          <div id="typeChart" class="progress-list"></div>
+        </section>
 
-        <article class="panel">
-          <div class="panel-heading">
-            <h2>Top Genres</h2>
-            <span>Top 10</span>
-          </div>
-          <div id="genreChart" class="bar-chart"></div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-heading">
-            <h2>Top Countries</h2>
-            <span>Top 10</span>
-          </div>
-          <div id="countryChart" class="bar-chart"></div>
-        </article>
-
-        <article class="panel">
+        <section class="panel retention-panel">
           <div class="panel-heading">
             <h2>Rating Distribution</h2>
-            <span>Count</span>
+            <button class="more-button" type="button" aria-label="More options">...</button>
           </div>
-          <div id="ratingChart" class="bar-chart"></div>
-        </article>
-      </section>
+          <div id="ratingChart" class="mini-columns"></div>
+        </section>
 
-      <section class="panel titles-panel">
-        <div class="panel-heading">
-          <h2>Filtered Titles</h2>
-          <span id="visibleCount">0 rows</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Country</th>
-                <th>Year Added</th>
-                <th>Rating</th>
-                <th>Genres</th>
-              </tr>
-            </thead>
-            <tbody id="titlesTable"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+        <section class="panel small-stat">
+          <div class="panel-heading">
+            <h2>Top Genres</h2>
+            <button class="more-button" type="button" aria-label="More options">...</button>
+          </div>
+          <div id="genreChart" class="dot-list"></div>
+        </section>
+
+        <section class="panel small-stat">
+          <div class="panel-heading">
+            <h2>Countries</h2>
+            <button class="more-button" type="button" aria-label="More options">...</button>
+          </div>
+          <div id="countryChart" class="dot-list blue"></div>
+        </section>
+
+        <section class="insight-card" id="pipeline">
+          <span>Insights</span>
+          <strong id="qualityScore">100%</strong>
+          <p>Validated rows are loaded into normalized tables and exported for dashboard consumption.</p>
+          <div class="insight-meter"><span></span></div>
+        </section>
+
+        <section class="panel records-panel" id="records">
+          <div class="panel-heading">
+            <h2>Filtered Titles</h2>
+            <span id="visibleCount">0 rows</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Country</th>
+                  <th>Year Added</th>
+                  <th>Rating</th>
+                  <th>Genres</th>
+                </tr>
+              </thead>
+              <tbody id="titlesTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer-note" id="deploy">
+        Static frontend reading CSV exports from <code>frontend/public/data</code>. ETL remains unchanged.
+      </footer>
+    </div>
 
     <script src="app.js"></script>
   </body>
