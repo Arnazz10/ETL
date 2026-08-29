@@ -388,3 +388,88 @@ dtype: int64
 2026-03-26 22:24:46,037 | INFO | __main__ | countries_loaded: 23
 2026-03-26 22:24:46,037 | INFO | __main__ | csv_outputs_created: 5
 2026-03-26 22:24:46,037 | INFO | __main__ | database_url: sqlite:////home/arnab/CODE/ETL-Data Engineering/netflix_etl/output/analytics.db
+2026-08-29 23:57:57,748 | INFO | __main__ | [2026-08-29T23:57:57] Starting extract step
+2026-08-29 23:57:57,750 | INFO | etl.extract | Extracted dataframe shape: (25, 12)
+2026-08-29 23:57:57,751 | INFO | etl.extract | Column names: ['show_id', 'type', 'title', 'director', 'cast', 'country', 'date_added', 'release_year', 'rating', 'duration', 'listed_in', 'description']
+2026-08-29 23:57:57,752 | INFO | etl.extract | Null counts:
+show_id         0
+type            1
+title           1
+director        1
+cast            0
+country         0
+date_added      0
+release_year    0
+rating          2
+duration        0
+listed_in       0
+description     0
+dtype: int64
+2026-08-29 23:57:57,753 | INFO | __main__ | [2026-08-29T23:57:57] Starting transform step
+2026-08-29 23:57:57,762 | INFO | etl.transform | Rows before transform: 25
+2026-08-29 23:57:57,763 | INFO | etl.transform | Rows after transform: 23
+2026-08-29 23:57:57,763 | INFO | etl.quality | Data quality report for cleaned_titles | rows=23 | cols=17 | nulls={'show_id': 0, 'type': 0, 'title': 0, 'director': 1, 'cast': 0, 'country': 0, 'date_added': 0, 'release_year': 0, 'rating': 0, 'duration': 0, 'listed_in': 0, 'description': 0, 'genres': 0, 'date_added_year': 0, 'country_primary': 0, 'decade': 0, 'title_id': 0}
+2026-08-29 23:57:57,763 | INFO | __main__ | [2026-08-29T23:57:57] Starting load step
+2026-08-29 23:57:57,799 | INFO | etl.load | Incremental records selected: 0
+2026-08-29 23:57:57,799 | INFO | etl.load | No new titles detected for append.
+2026-08-29 23:57:57,831 | INFO | etl.load | Top 10 Genres:
+                    genre  content_count
+0                  Dramas              7
+1    International Movies              4
+2  International TV Shows              4
+3      Action & Adventure              3
+4                Comedies              3
+5           Documentaries              3
+6              Docuseries              3
+7                Kids' TV              3
+8             TV Comedies              2
+9               TV Dramas              2
+2026-08-29 23:57:57,836 | INFO | etl.load | Content Added Per Year:
+   year_added  content_count
+0        2015              1
+1        2016              1
+2        2017              2
+3        2018              3
+4        2019              3
+5        2020              4
+6        2021              4
+7        2022              3
+8        2023              2
+2026-08-29 23:57:57,841 | INFO | etl.load | Movies Vs Tv Ratio:
+      type  content_count
+0    Movie             14
+1  TV Show              9
+2026-08-29 23:57:57,845 | INFO | etl.load | Top 10 Countries:
+         country  content_count
+0  United States              4
+1          India              2
+2      Argentina              1
+3      Australia              1
+4         Brazil              1
+5         Canada              1
+6          Egypt              1
+7         France              1
+8        Germany              1
+9         Greece              1
+2026-08-29 23:57:57,849 | INFO | etl.load | Rating Distribution:
+  rating  content_count
+0     PG              4
+1  TV-14              4
+2     NR              3
+3  PG-13              2
+4      R              2
+5   TV-G              2
+6  TV-MA              2
+7  TV-PG              2
+8      G              1
+9  TV-Y7              1
+2026-08-29 23:57:57,856 | INFO | __main__ | [2026-08-29T23:57:57] Pipeline complete
+2026-08-29 23:57:57,856 | INFO | __main__ | Final summary stats:
+2026-08-29 23:57:57,857 | INFO | __main__ | raw_row_count: 25
+2026-08-29 23:57:57,857 | INFO | __main__ | cleaned_row_count: 23
+2026-08-29 23:57:57,857 | INFO | __main__ | titles_loaded: 23
+2026-08-29 23:57:57,857 | INFO | __main__ | new_titles_loaded: 0
+2026-08-29 23:57:57,857 | INFO | __main__ | genres_loaded: 46
+2026-08-29 23:57:57,857 | INFO | __main__ | countries_loaded: 23
+2026-08-29 23:57:57,857 | INFO | __main__ | csv_outputs_created: 5
+2026-08-29 23:57:57,857 | INFO | __main__ | database_url: sqlite:////home/arnab/CODE/ETL-Data Engineering/netflix_etl/output/analytics.db

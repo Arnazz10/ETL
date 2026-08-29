@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Netflix Analytics ETL Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">ETL Portfolio Project</p>
+        <h1>Netflix Analytics Pipeline</h1>
+        <p class="summary">
+          CSV ingestion, data quality checks, transformation, SQL loading, and dashboard exports in one workflow.
+        </p>
+      </div>
+      <div class="status-panel">
+        <span class="status-dot"></span>
+        <span>Static Vercel-ready dashboard</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="controls" aria-label="Dashboard filters">
+        <label>
+          Type
+          <select id="typeFilter">
+            <option value="all">All</option>
+          </select>
+        </label>
+        <label>
+          Rating
+          <select id="ratingFilter">
+            <option value="all">All</option>
+          </select>
+        </label>
+        <label>
+          Decade
+          <select id="decadeFilter">
+            <option value="all">All</option>
+          </select>
+        </label>
+        <label>
+          Search
+          <input id="searchInput" type="search" placeholder="Search titles">
+        </label>
+      </section>
+
+      <section class="kpis" aria-label="Key metrics">
+        <article>
+          <span>Total Titles</span>
+          <strong id="totalTitles">0</strong>
+        </article>
+        <article>
+          <span>Movies</span>
+          <strong id="movieCount">0</strong>
+        </article>
+        <article>
+          <span>TV Shows</span>
+          <strong id="tvCount">0</strong>
+        </article>
+        <article>
+          <span>Top Country</span>
+          <strong id="topCountry">-</strong>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel wide">
+          <div class="panel-heading">
+            <h2>Content Added Per Year</h2>
+            <span>Trend</span>
+          </div>
+          <div id="yearChart" class="bar-chart"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Movies vs TV Shows</h2>
+            <span>Mix</span>
+          </div>
+          <div id="typeChart" class="bar-chart compact"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Top Genres</h2>
+            <span>Top 10</span>
+          </div>
+          <div id="genreChart" class="bar-chart"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Top Countries</h2>
+            <span>Top 10</span>
+          </div>
+          <div id="countryChart" class="bar-chart"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Rating Distribution</h2>
+            <span>Count</span>
+          </div>
+          <div id="ratingChart" class="bar-chart"></div>
+        </article>
+      </section>
+
+      <section class="panel titles-panel">
+        <div class="panel-heading">
+          <h2>Filtered Titles</h2>
+          <span id="visibleCount">0 rows</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Country</th>
+                <th>Year Added</th>
+                <th>Rating</th>
+                <th>Genres</th>
+              </tr>
+            </thead>
+            <tbody id="titlesTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

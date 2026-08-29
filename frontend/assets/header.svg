@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 520" role="img" aria-label="Abstract analytics dashboard background">
+  <rect width="1400" height="520" fill="#101828"/>
+  <g opacity="0.85">
+    <rect x="820" y="88" width="420" height="56" rx="8" fill="#e50914"/>
+    <rect x="900" y="176" width="270" height="56" rx="8" fill="#087f8c"/>
+    <rect x="780" y="264" width="520" height="56" rx="8" fill="#f2b84b"/>
+    <rect x="970" y="352" width="230" height="56" rx="8" fill="#ffffff"/>
+  </g>
+  <g opacity="0.25" stroke="#ffffff" stroke-width="2">
+    <path d="M120 398 C 240 280, 310 345, 430 220 S 650 148, 760 214"/>
+    <path d="M90 248 C 190 190, 320 215, 420 130 S 605 72, 720 130"/>
+  </g>
+  <g opacity="0.18" fill="#ffffff">
+    <circle cx="160" cy="398" r="7"/>
+    <circle cx="430" cy="220" r="7"/>
+    <circle cx="760" cy="214" r="7"/>
+    <circle cx="420" cy="130" r="7"/>
+  </g>
+</svg>
