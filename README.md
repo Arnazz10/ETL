@@ -2,6 +2,8 @@
 
 A Python-based ETL pipeline for processing Netflix title data, loading analytics-ready tables into a database, and publishing dashboard-ready exports for reporting and a static frontend.
 
+![ETL dashboard](frontend/assets/dashboard.png)
+
 ## Overview
 
 The project ingests Netflix title records from a CSV file, applies validation and transformation rules, stores normalized data in SQLite or PostgreSQL, and generates analytical outputs for dashboards.
